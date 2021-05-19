@@ -24,39 +24,39 @@ namespace RecieverOne
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddMassTransit(config =>
-			{
-				//config.AddConsumer<SimpleMessageConsumer>();
-
-				config.UsingRabbitMq((context, cfg) =>
-				{
-					cfg.ReceiveEndpoint("simple-message-queue", c =>
-					{
-						c.ConfigureConsumeTopology = false;
-						c.PrefetchCount = 20;
-						c.Bind("simple-message-exchange", b =>
-						{
-							b.ExchangeType = ExchangeType.Direct;
-							b.RoutingKey = "One";
-						});
-
-						//c.ConfigureConsumer<SimpleMessageConsumer>(context);
-					});
-				});
-			});
-
 			//services.AddMassTransit(config =>
 			//{
-			//	config.AddConsumer<SimpleMessageConsumer>();
+			//	//config.AddConsumer<SimpleMessageConsumer>();
 
 			//	config.UsingRabbitMq((context, cfg) =>
 			//	{
 			//		cfg.ReceiveEndpoint("simple-message-queue", c =>
 			//		{
-			//			c.ConfigureConsumer<SimpleMessageConsumer>(context);
+			//			c.ConfigureConsumeTopology = false;
+			//			c.PrefetchCount = 20;
+			//			c.Bind("simple-message-exchange", b =>
+			//			{
+			//				b.ExchangeType = ExchangeType.Direct;
+			//				b.RoutingKey = "One";
+			//			});
+
+			//			//c.ConfigureConsumer<SimpleMessageConsumer>(context);
 			//		});
 			//	});
 			//});
+
+			services.AddMassTransit(config =>
+			{
+				config.AddConsumer<SimpleMessageConsumer>();
+
+				config.UsingRabbitMq((context, cfg) =>
+				{
+					cfg.ReceiveEndpoint("simple-message-first-queue", c =>
+					{
+						c.ConfigureConsumer<SimpleMessageConsumer>(context);
+					});
+				});
+			});
 
 			services.AddMassTransitHostedService();
 

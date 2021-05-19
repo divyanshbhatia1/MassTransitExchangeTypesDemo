@@ -26,8 +26,10 @@ namespace RecieverTwo
 
 				config.UsingRabbitMq((context, cfg) =>
 				{
-					cfg.ReceiveEndpoint("simple-message-queue", c =>
+					cfg.ReceiveEndpoint("simple-message-second-queue", c =>
 					{
+						//c.AutoDelete = true;
+						//c.QueueExpiration = new System.TimeSpan(300000000);
 						c.ConfigureConsumer<SimpleMessageConsumer>(context);
 					});
 				});

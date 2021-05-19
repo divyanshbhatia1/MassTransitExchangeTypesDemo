@@ -71,6 +71,19 @@ namespace Sender.Controllers
 			return Ok();
 		}
 
+		[HttpPost("PostMessageToQueue")]
+		public async Task<IActionResult> PostMessageToQueue(string queue, string message)
+		{
+			var endpoint = await _sendEndpointProvider.GetSendEndpoint(new System.Uri($"queue:{queue}")); //Will create queue if it doesn't exist
+
+			var simpleMessage = new SimpleMessage
+			{ Message = message };
+
+			await endpoint.Send(simpleMessage);
+
+			return Ok();
+		}
+
 
 		[HttpPost("PostMessageAndGetResponse")]
 		public async Task<IActionResult> PostMessageAndGetResponse(string message)
